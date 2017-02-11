@@ -14,4 +14,5 @@ public interface LoginView
     void showErrorMessage(DialogViewModel pErrorMessage);
     void navigatePIN();
     void navigateHome();
+    void checkPermissions();
 }

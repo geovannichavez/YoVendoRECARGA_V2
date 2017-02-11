@@ -27,6 +27,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
 
+    compile files('libs/commons-codec-1.10.jar')
+
     //Volley (new Google's version surprisely)
     compile 'com.android.volley:volley:1.0.0'
 }

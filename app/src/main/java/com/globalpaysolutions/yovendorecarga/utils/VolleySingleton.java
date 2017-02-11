@@ -49,7 +49,7 @@ public final class VolleySingleton
     {
         if (mSingleton == null)
         {
-            mSingleton = new VolleySingleton(mContext);
+            mSingleton = new VolleySingleton(pContext);
         }
         return mSingleton;
     }

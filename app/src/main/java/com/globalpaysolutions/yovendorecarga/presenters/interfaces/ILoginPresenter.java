@@ -7,5 +7,8 @@ package com.globalpaysolutions.yovendorecarga.presenters.interfaces;
 public interface ILoginPresenter
 {
     void setInitialViewState();
+    void checkPermissions();
     void getPublicIPAddress();
+    void saveDeviceID(String pDeviceId);
+    String getDeviceID();
 }

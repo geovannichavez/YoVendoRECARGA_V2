@@ -84,5 +84,12 @@ public class StringsURL
 
     public final static String CEO_MARK_NOTIFICATION_READ = CEO_ANALYTICS_URL_BASE + "setNotificationRead/";
 
+    /*
+    *
+    * OTRAS
+    *
+    */
+
+    public final static String IP_ADDRESS = "https://api.ipify.org?format=json";
 
 }

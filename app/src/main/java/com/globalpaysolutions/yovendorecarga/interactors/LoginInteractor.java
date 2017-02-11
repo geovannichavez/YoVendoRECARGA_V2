@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class LoginInteractor implements ILoginInteractor
 {
-    public static final String TAG = LoginInteractor.class.getSimpleName();
+    private static final String TAG = LoginInteractor.class.getSimpleName();
     private Context mContext;
 
     public LoginInteractor(Context pContext)
@@ -36,7 +36,7 @@ public class LoginInteractor implements ILoginInteractor
     @Override
     public void getDeviceIP(final LoginListener pListener)
     {
-        String RequestURL = "https://api.ipify.org?format=json";
+        String RequestURL = StringsURL.IP_ADDRESS;
 
         VolleySingleton.getInstance(mContext).addToRequestQueue(new JsonObjectRequest(
                 Request.Method.GET,
@@ -47,6 +47,7 @@ public class LoginInteractor implements ILoginInteractor
             public void onResponse(JSONObject response)
             {
                 pListener.onIPAddressSuccess(response);
+                Log.i(TAG, response.toString());
             }
         }, new Response.ErrorListener()
         {
@@ -54,6 +55,7 @@ public class LoginInteractor implements ILoginInteractor
             public void onErrorResponse(VolleyError error)
             {
                 pListener.onIPAddressError(error);
+                Log.i(TAG, error.getMessage());
             }
         })
         {
