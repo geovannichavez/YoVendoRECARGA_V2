@@ -9,7 +9,7 @@ import com.globalpaysolutions.yovendorecarga.models.DialogViewModel;
 public interface LoginView
 {
     void initialViewsStates();
-    void showLoading();
+    void showLoading(String pLabel);
     void hideLoading();
     void showErrorMessage(DialogViewModel pErrorMessage);
     void navigatePIN();

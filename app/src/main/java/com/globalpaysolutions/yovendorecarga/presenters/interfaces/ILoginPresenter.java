@@ -7,4 +7,5 @@ package com.globalpaysolutions.yovendorecarga.presenters.interfaces;
 public interface ILoginPresenter
 {
     void setInitialViewState();
+    void getPublicIPAddress();
 }
