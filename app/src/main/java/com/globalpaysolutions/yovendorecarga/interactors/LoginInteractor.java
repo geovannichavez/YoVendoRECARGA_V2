@@ -40,7 +40,8 @@ public class LoginInteractor implements ILoginInteractor
 
         VolleySingleton.getInstance(mContext).addToRequestQueue(new JsonObjectRequest(
                 Request.Method.GET,
-                RequestURL, null,
+                RequestURL,
+                null,
                 new Response.Listener<JSONObject>()
         {
             @Override
@@ -71,13 +72,11 @@ public class LoginInteractor implements ILoginInteractor
     }
 
     @Override
-    public void attemptLogin(final LoginListener pListener, String pEmail, String pPassword, String pDeviceId, String pIPAddress)
+    public void attemptLogin(final LoginListener pListener, final String pEmail, String pPassword, String pDeviceId, String pIPAddress)
     {
         JSONObject jObject = new JSONObject();
 
         String deviceName = getDeviceName();
-        //String encryptedPass = EncryptedPass(KEY, IV, pPass);
-        //EncrptdPwd = encryptedPass;
 
         try
         {
@@ -87,22 +86,21 @@ public class LoginInteractor implements ILoginInteractor
             jObject.put("deviceIP", pIPAddress);
             jObject.put("deviceID", pDeviceId);
             System.out.println(jObject);
-        }
-        catch (JSONException ex)
+        } catch (JSONException ex)
         {
             ex.printStackTrace();
         }
 
         VolleySingleton.getInstance(mContext).addToRequestQueue(new JsonObjectRequest(
                 Request.Method.POST,
-                StringsURL.SIGNIN,
+                StringsURL.AUTH_SIGNIN,
                 jObject,
                 new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response)
             {
-                pListener.onLoginSuccess(response);
+                pListener.onLoginSuccess(pEmail, response);
             }
         }, new Response.ErrorListener()
         {
@@ -112,6 +110,41 @@ public class LoginInteractor implements ILoginInteractor
                 pListener.onError(error);
             }
         }), 0);
+    }
+
+    @Override
+    public void getUserProfile(final LoginListener pListener, final String pToken)
+    {
+        VolleySingleton.getInstance(mContext).addToRequestQueue(new JsonObjectRequest(
+                Request.Method.GET,
+                StringsURL.PROFILE,
+                null,
+                new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response)
+            {
+                pListener.onProfileSuccess(response);
+            }
+        }, new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                pListener.onError(error);
+            }
+        })
+        {
+            //Se añade el header para enviar el Token
+            @Override
+            public Map<String, String> getHeaders()
+            {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Token-Autorization", pToken);
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+        }, 1); //Parametro de número de re-intentos
     }
 
 

@@ -13,6 +13,10 @@ import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 public class Encrypt
 {
+    public static final String KEY = "8080808080808089"; //llave
+    public static final String IV = "8080808080808090"; // vector de inicialización
+
+
     // Definición del tipo de algoritmo a utilizar (AES, DES, RSA)
     private final static String alg = "AES";
     // Definición del modo de cifrado a utilizar

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -13,11 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.globalpaysolutions.yovendorecarga.R;
-import com.globalpaysolutions.yovendorecarga.models.DialogViewModel;
+import com.globalpaysolutions.yovendorecarga.models.viewmodels.DialogViewModel;
 import com.globalpaysolutions.yovendorecarga.presenters.LoginPresenterImpl;
 import com.globalpaysolutions.yovendorecarga.utils.Validation;
 import com.globalpaysolutions.yovendorecarga.views.LoginView;
@@ -121,7 +123,8 @@ public class Login extends AppCompatActivity implements LoginView
     @Override
     public void navigateHome()
     {
-
+        Intent home = new Intent(this, Home.class);
+        startActivity(home);
     }
 
     @Override
@@ -160,7 +163,6 @@ public class Login extends AppCompatActivity implements LoginView
                 {
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
                 }
-
             }
             else
             {
@@ -190,6 +192,7 @@ public class Login extends AppCompatActivity implements LoginView
             case REQUEST_READ_PHONE_STATE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
+                    //TODO: Revisar el flujo de estas lineas
                     String deviceId = this.mPresenter.getDeviceID();
                     this.mPresenter.saveDeviceID(deviceId);
                 }
@@ -213,6 +216,20 @@ public class Login extends AppCompatActivity implements LoginView
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    public void loginUser(View view)
+    {
+        try
+        {
+            String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
+            this.mPresenter.attemptLogin(email, password);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
     }
 

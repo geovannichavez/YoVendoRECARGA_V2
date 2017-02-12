@@ -11,9 +11,14 @@ import com.android.volley.VolleyError;
 import com.globalpaysolutions.yovendorecarga.R;
 import com.globalpaysolutions.yovendorecarga.interactors.LoginInteractor;
 import com.globalpaysolutions.yovendorecarga.interactors.LoginListener;
+import com.globalpaysolutions.yovendorecarga.models.api.LoginResponse;
+import com.globalpaysolutions.yovendorecarga.models.api.Profile;
+import com.globalpaysolutions.yovendorecarga.models.api.ProfileResponse;
 import com.globalpaysolutions.yovendorecarga.presenters.interfaces.ILoginPresenter;
+import com.globalpaysolutions.yovendorecarga.utils.Encrypt;
 import com.globalpaysolutions.yovendorecarga.utils.SessionManager;
 import com.globalpaysolutions.yovendorecarga.views.LoginView;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,15 +78,42 @@ public class LoginPresenterImpl implements ILoginPresenter, LoginListener
     }
 
     @Override
+    public void attemptLogin(String pEmail, String pPassword)
+    {
+        String encryptedPassword = encryptedPassword(Encrypt.KEY, Encrypt.IV, pPassword);
+        String deviceIpAddress = mSessionManager.getDeviceIpAddress();
+        String deviceId = mSessionManager.getDeviceID();
+        this.mSessionManager.saveUserPassword(encryptedPassword);
+
+        mView.showLoading(mContext.getString(R.string.dialog_logging_in));
+        mInteractor.attemptLogin(this, pEmail, encryptedPassword, deviceId, deviceIpAddress);
+    }
+
+    @Override
     public void onError(VolleyError errorResponse)
     {
 
     }
 
     @Override
-    public void onLoginSuccess(JSONObject response)
+    public void onLoginSuccess(String pEmail, JSONObject response)
     {
+        try
+        {
+            mView.hideLoading();
+            Gson gson = new Gson();
+            LoginResponse loginResponse = gson.fromJson(response.toString(), LoginResponse.class);
 
+            this.mSessionManager.createLoginSession(pEmail, loginResponse.getToken(),
+                    loginResponse.getAvailableAmount(), loginResponse.getSesionID(), loginResponse.getVendorM(),
+                    loginResponse.getCountryID(), loginResponse.getISO3Code(), loginResponse.getPhoneCode(),
+                    loginResponse.getVendorCode());
+            this.mInteractor.getUserProfile(this, loginResponse.getToken());
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -102,6 +134,45 @@ public class LoginPresenterImpl implements ILoginPresenter, LoginListener
     public void onIPAddressError(VolleyError errorResponse)
     {
         Log.e(TAG, errorResponse.getMessage());
+    }
+
+    @Override
+    public void onProfileSuccess(JSONObject response)
+    {
+        try
+        {
+            Gson gson = new Gson();
+            ProfileResponse profileResponse = gson.fromJson(response.toString(), ProfileResponse.class);
+            Profile profile = profileResponse.getProfile();
+            this.mSessionManager.saveUserProfile(profile.getFirstName(), profile.getLastName());
+
+            if(mSessionManager.getUserPin().isEmpty())
+            {
+                /*Intent pinIntent = new Intent(this, PIN.class);
+                pinIntent.putExtra("PIN_CONF", "SET_FIRST_TIME");
+                startActivity(pinIntent);
+                finish();*/
+                this.mView.navigatePIN();
+            }
+            /*else if(!lastEmailSignedin.equals(RetrieveUserEmail()) || !lastRememberEmail ||  !sessionManager.MustRememeberEmail())
+            {
+                Intent pinIntent = new Intent(this, PIN.class);
+                pinIntent.putExtra("PIN_CONF", "SET_NEW_EMAIL_PIN");
+                startActivity(pinIntent);
+                finish();
+            }
+            else
+            {
+                //Intent para abrir la siguiente Activity
+                Intent intent = new Intent(this, Home.class);
+                startActivity(intent);
+                finish();
+            }*/
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
 
@@ -152,6 +223,20 @@ public class LoginPresenterImpl implements ILoginPresenter, LoginListener
         }
 
         return isConnectedWifi || isConnectedMobile;
+    }
+
+    private String encryptedPassword(String pKey, String pIV, String pClearText)
+    {
+        String _encrypted = "";
+        try
+        {
+            _encrypted = Encrypt.encrypt(pKey, pIV, pClearText);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return _encrypted;
     }
 
 }

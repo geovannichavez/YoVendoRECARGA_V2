@@ -11,7 +11,8 @@ import org.json.JSONObject;
 public interface LoginListener
 {
     void onError(VolleyError errorResponse);
-    void onLoginSuccess(JSONObject response);
+    void onLoginSuccess(String pEmail, JSONObject response);
     void onIPAddressSuccess(JSONObject response);
     void onIPAddressError(VolleyError errorResponse);
+    void onProfileSuccess(JSONObject response);
 }

@@ -10,4 +10,5 @@ public interface ILoginInteractor
 {
     void getDeviceIP(LoginListener pListener);
     void attemptLogin(LoginListener pListener, String pEmail, String pPassword, String pDeviceId, String pIPAddress);
+    void getUserProfile(LoginListener pListener, String pToken);
 }

@@ -1,4 +1,4 @@
-package com.globalpaysolutions.yovendorecarga.models;
+package com.globalpaysolutions.yovendorecarga.models.viewmodels;
 
 /**
  * Created by Josué Chávez on 10/02/2017.

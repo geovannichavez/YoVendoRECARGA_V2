@@ -1,6 +1,6 @@
 package com.globalpaysolutions.yovendorecarga.views;
 
-import com.globalpaysolutions.yovendorecarga.models.DialogViewModel;
+import com.globalpaysolutions.yovendorecarga.models.viewmodels.DialogViewModel;
 
 /**
  * Created by Josué Chávez on 10/02/2017.
