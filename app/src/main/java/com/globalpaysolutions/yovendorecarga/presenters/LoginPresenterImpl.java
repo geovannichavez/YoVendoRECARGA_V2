@@ -1,12 +1,19 @@
 package com.globalpaysolutions.yovendorecarga.presenters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.globalpaysolutions.yovendorecarga.R;
 import com.globalpaysolutions.yovendorecarga.interactors.LoginInteractor;
@@ -14,6 +21,7 @@ import com.globalpaysolutions.yovendorecarga.interactors.LoginListener;
 import com.globalpaysolutions.yovendorecarga.models.api.LoginResponse;
 import com.globalpaysolutions.yovendorecarga.models.api.Profile;
 import com.globalpaysolutions.yovendorecarga.models.api.ProfileResponse;
+import com.globalpaysolutions.yovendorecarga.models.viewmodels.DialogViewModel;
 import com.globalpaysolutions.yovendorecarga.presenters.interfaces.ILoginPresenter;
 import com.globalpaysolutions.yovendorecarga.utils.Encrypt;
 import com.globalpaysolutions.yovendorecarga.utils.SessionManager;
@@ -30,6 +38,7 @@ import org.json.JSONObject;
 public class LoginPresenterImpl implements ILoginPresenter, LoginListener
 {
     private static final String TAG = LoginPresenterImpl.class.getCanonicalName();
+    private static final String PIN_CONF = "PIN_CONF";
 
     private LoginView mView;
     private LoginInteractor mInteractor;
@@ -92,7 +101,46 @@ public class LoginPresenterImpl implements ILoginPresenter, LoginListener
     @Override
     public void onError(VolleyError errorResponse)
     {
+        int statusCode = 0;
+        NetworkResponse networkResponse = errorResponse.networkResponse;
+        DialogViewModel errorMessage = new DialogViewModel();
 
+        mView.hideLoading();
+        mView.initialViewsStates();
+
+        if (networkResponse != null)
+        {
+            statusCode = networkResponse.statusCode;
+        }
+
+        if (errorResponse instanceof TimeoutError || errorResponse instanceof NoConnectionError)
+        {
+            errorMessage.setTitle(mContext.getString(R.string.we_are_sorry_msg_title));
+            errorMessage.setLine1(mContext.getString(R.string.something_went_wrong_try_again));
+            errorMessage.setAcceptButton(mContext.getString(R.string.button_accept));
+            mView.showErrorMessage(errorMessage);
+        }
+        else if (errorResponse instanceof ServerError)
+        {
+            errorMessage.setTitle(mContext.getString(R.string.we_are_sorry_msg_title));
+            errorMessage.setLine1(mContext.getString(R.string.something_went_wrong_try_again));
+            errorMessage.setAcceptButton(mContext.getString(R.string.button_accept));
+            mView.showErrorMessage(errorMessage);
+        }
+        else if (errorResponse instanceof NetworkError)
+        {
+            errorMessage.setTitle(mContext.getString(R.string.internet_connecttion_title));
+            errorMessage.setLine1(mContext.getString(R.string.internet_connecttion_msg));
+            errorMessage.setAcceptButton(mContext.getString(R.string.button_accept));
+            mView.showErrorMessage(errorMessage);
+        }
+        else if (errorResponse instanceof AuthFailureError)
+        {
+            errorMessage.setTitle(mContext.getString(R.string.error_invalid_credentials_title));
+            errorMessage.setLine1(mContext.getString(R.string.error_invalid_credentials_content));
+            errorMessage.setAcceptButton(mContext.getString(R.string.button_accept));
+            mView.showErrorMessage(errorMessage);
+        }
     }
 
     @Override
@@ -100,7 +148,6 @@ public class LoginPresenterImpl implements ILoginPresenter, LoginListener
     {
         try
         {
-            mView.hideLoading();
             Gson gson = new Gson();
             LoginResponse loginResponse = gson.fromJson(response.toString(), LoginResponse.class);
 
@@ -148,26 +195,16 @@ public class LoginPresenterImpl implements ILoginPresenter, LoginListener
 
             if(mSessionManager.getUserPin().isEmpty())
             {
-                /*Intent pinIntent = new Intent(this, PIN.class);
-                pinIntent.putExtra("PIN_CONF", "SET_FIRST_TIME");
-                startActivity(pinIntent);
-                finish();*/
-                this.mView.navigatePIN();
+                this.mView.navigatePIN(PIN_CONF, "SET_FIRST_TIME");
             }
-            /*else if(!lastEmailSignedin.equals(RetrieveUserEmail()) || !lastRememberEmail ||  !sessionManager.MustRememeberEmail())
+            else if(!mSessionManager.getUserEmail().equals(profile.getEmail()) || !mSessionManager.getRememberEmailValue())
             {
-                Intent pinIntent = new Intent(this, PIN.class);
-                pinIntent.putExtra("PIN_CONF", "SET_NEW_EMAIL_PIN");
-                startActivity(pinIntent);
-                finish();
+                this.mView.navigatePIN(PIN_CONF, "SET_NEW_EMAIL_PIN");
             }
             else
             {
-                //Intent para abrir la siguiente Activity
-                Intent intent = new Intent(this, Home.class);
-                startActivity(intent);
-                finish();
-            }*/
+                this.mView.navigateHome();
+            }
         }
         catch (Exception ex)
         {

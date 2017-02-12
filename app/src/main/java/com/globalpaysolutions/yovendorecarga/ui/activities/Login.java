@@ -111,13 +111,16 @@ public class Login extends AppCompatActivity implements LoginView
     @Override
     public void showErrorMessage(DialogViewModel pErrorMessage)
     {
-
+        CreateDialog(pErrorMessage.getTitle(), pErrorMessage.getLine1(), pErrorMessage.getAcceptButton());
     }
 
     @Override
-    public void navigatePIN()
+    public void navigatePIN(String pIntentKey, String pIntentValue)
     {
-
+        Intent pinIntent = new Intent(this, PIN.class);
+        pinIntent.putExtra(pIntentKey, pIntentValue);
+        startActivity(pinIntent);
+        finish();
     }
 
     @Override
@@ -231,6 +234,29 @@ public class Login extends AppCompatActivity implements LoginView
         {
             ex.printStackTrace();
         }
+    }
+
+    /*
+    *
+    *
+    *   OTROS METODOS
+    *
+    *
+    */
+
+    public void CreateDialog(String pTitle, String pMessage, String pButton)
+    {
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(Login.this);
+        alertDialog.setTitle(pTitle);
+        alertDialog.setMessage(pMessage);
+        alertDialog.setPositiveButton(pButton, new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 
 

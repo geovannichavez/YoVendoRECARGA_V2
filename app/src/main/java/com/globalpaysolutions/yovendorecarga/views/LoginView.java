@@ -12,7 +12,7 @@ public interface LoginView
     void showLoading(String pLabel);
     void hideLoading();
     void showErrorMessage(DialogViewModel pErrorMessage);
-    void navigatePIN();
+    void navigatePIN(String pIntentKey, String pIntentValue);
     void navigateHome();
     void checkPermissions();
 }

@@ -101,7 +101,11 @@ public class SessionManager
         mPinEditor.commit();
     }
 
-
+    public void saveRememberEmailValue(boolean pRemember)
+    {
+        mEditor.putBoolean(KEY_REMEMBER_EMAIL, pRemember);
+        mEditor.commit();
+    }
 
     /*
     * **************************************************
@@ -139,6 +143,16 @@ public class SessionManager
     {
         String securityPin = mPinPreferences.getString(KEY_PIN_CODE, "");
         return securityPin;
+    }
+
+    public boolean getRememberEmailValue()
+    {
+        return mPreferences.getBoolean(KEY_REMEMBER_EMAIL, false);
+    }
+
+    public String getUserEmail()
+    {
+        return mPreferences.getString(KEY_USER_EMAIL, "");
     }
 
 
