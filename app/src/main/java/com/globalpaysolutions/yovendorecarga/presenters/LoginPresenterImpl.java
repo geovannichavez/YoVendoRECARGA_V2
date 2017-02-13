@@ -56,7 +56,10 @@ public class LoginPresenterImpl implements ILoginPresenter, LoginListener
     @Override
     public void setInitialViewState()
     {
-        this.mView.initialViewsStates();
+        if(mSessionManager.getRememberEmailValue())
+            mView.initialViewsStates(mSessionManager.getUserEmail());
+        else
+            mView.initialViewsStates("");
     }
 
     @Override
@@ -87,12 +90,13 @@ public class LoginPresenterImpl implements ILoginPresenter, LoginListener
     }
 
     @Override
-    public void attemptLogin(String pEmail, String pPassword)
+    public void attemptLogin(String pEmail, String pPassword, boolean pEmailChecked)
     {
         String encryptedPassword = encryptedPassword(Encrypt.KEY, Encrypt.IV, pPassword);
         String deviceIpAddress = mSessionManager.getDeviceIpAddress();
         String deviceId = mSessionManager.getDeviceID();
         this.mSessionManager.saveUserPassword(encryptedPassword);
+        this.mSessionManager.saveRememberEmailValue(pEmailChecked);
 
         mView.showLoading(mContext.getString(R.string.dialog_logging_in));
         mInteractor.attemptLogin(this, pEmail, encryptedPassword, deviceId, deviceIpAddress);
@@ -106,7 +110,11 @@ public class LoginPresenterImpl implements ILoginPresenter, LoginListener
         DialogViewModel errorMessage = new DialogViewModel();
 
         mView.hideLoading();
-        mView.initialViewsStates();
+
+        if(mSessionManager.getRememberEmailValue())
+            mView.initialViewsStates(mSessionManager.getUserEmail());
+        else
+            mView.initialViewsStates("");
 
         if (networkResponse != null)
         {
@@ -155,6 +163,7 @@ public class LoginPresenterImpl implements ILoginPresenter, LoginListener
                     loginResponse.getAvailableAmount(), loginResponse.getSesionID(), loginResponse.getVendorM(),
                     loginResponse.getCountryID(), loginResponse.getISO3Code(), loginResponse.getPhoneCode(),
                     loginResponse.getVendorCode());
+
             this.mInteractor.getUserProfile(this, loginResponse.getToken());
         }
         catch (Exception ex)

@@ -52,8 +52,8 @@
     <string name="insufficent_balance_ln1">No tienes suficiente saldo para realizar la recarga.</string>
     <string name="insufficent_balance_ln2">Haz un depósito bancario para añadir saldo a tu cuenta.</string>
     <string name="invitation_error">ALGO HA SALIDO MAL...</string>
-    <string name="error_invalid_credentials_title">ERROR DE CREDENCIALES</string>
-    <string name="error_invalid_credentials_content">El correo o la contraseña son incorrectos</string>
+    <string name="error_invalid_credentials_title">CREDENCIALES INCORRECTAS</string>
+    <string name="error_invalid_credentials_content">El correo o la contraseña son incorrectos, inténtalo de nuevo.</string>
 
     <!--Deposito Bancario-->
     <string name="deposit_error_line1">Tu depósito no pudo ser procesado. Inténtalo más tarde.</string>

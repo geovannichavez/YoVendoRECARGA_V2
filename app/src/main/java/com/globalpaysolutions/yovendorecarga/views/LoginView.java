@@ -8,7 +8,7 @@ import com.globalpaysolutions.yovendorecarga.models.viewmodels.DialogViewModel;
 
 public interface LoginView
 {
-    void initialViewsStates();
+    void initialViewsStates(String pLastEmail);
     void showLoading(String pLabel);
     void hideLoading();
     void showErrorMessage(DialogViewModel pErrorMessage);

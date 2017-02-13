@@ -65,11 +65,11 @@ public class Login extends AppCompatActivity implements LoginView
     }
 
     @Override
-    public void initialViewsStates()
+    public void initialViewsStates(String pLastEmail)
     {
         try
         {
-            etEmail.setText("");
+            etEmail.setText(pLastEmail);
             etPassword.setText("");
             chkRemember.setChecked(true);
 
@@ -228,7 +228,8 @@ public class Login extends AppCompatActivity implements LoginView
         {
             String email = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
-            this.mPresenter.attemptLogin(email, password);
+            boolean rememberEmail = chkRemember.isChecked();
+            this.mPresenter.attemptLogin(email, password, rememberEmail);
         }
         catch (Exception ex)
         {

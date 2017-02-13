@@ -11,5 +11,5 @@ public interface ILoginPresenter
     void getPublicIPAddress();
     void saveDeviceID(String pDeviceId);
     String getDeviceID();
-    void attemptLogin(String pEmail, String pPassword);
+    void attemptLogin(String pEmail, String pPassword, boolean pEmailChecked);
 }

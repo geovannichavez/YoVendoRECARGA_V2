@@ -1,14 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_pin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.globalpaysolutions.yovendorecarga.ui.activities.PIN">
 
-</RelativeLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarPin"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/ApplicationGreenTheme"
+        android:elevation="4dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat"
+        app:theme="@style/ToolbarTheme">
+
+        <ImageView
+            android:id="@+id/tbLogo"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_horizontal"/>
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/ActivityHorizontalExtraCustomMargin"
+        android:paddingRight="@dimen/ActivityHorizontalExtraCustomMargin"
+        android:paddingTop="@dimen/ActivityVerticalCustomMargin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/title_insert_pin"
+            android:textColor="@color/TextColor"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/tvContentPin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/content_insert_pin"/>
+
+
+        <EditText
+            android:id="@+id/etPincode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:width="200dp"
+            android:gravity="center"
+            android:hint="@string/pin_insert_hint"
+            android:inputType="numberPassword"
+            android:maxLength="4"
+            android:textSize="26sp"/>
+
+        <EditText
+            android:id="@+id/etConfirmPincode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:width="200dp"
+            android:gravity="center"
+            android:hint="@string/pin_confirm_hint"
+            android:inputType="numberPassword"
+            android:maxLength="4"
+            android:textSize="26sp"/>
+
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/ActivityVerticalCustomMargin"
+            android:background="@drawable/btn_effect_ripple_green"
+            android:onClick="SetPinCode"
+            android:text="Guardar"
+            android:textColor="@color/ActivityWhiteBackground"/>
+
+    </LinearLayout>
+
+</LinearLayout>
