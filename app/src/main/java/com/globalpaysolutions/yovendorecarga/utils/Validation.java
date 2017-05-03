@@ -1,9 +1,14 @@
 package com.globalpaysolutions.yovendorecarga.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -26,6 +31,7 @@ public class Validation
     private static final String USERNAME_REGEX = "^[_A-Za-z0-9-\\+]{3,15}$";
     private static final String AMOUNT_REGEX = "[0-9]+([,.][0-9]{1,2})?";
     private static final String VOUCHER_REGEX = "\\d+$";
+    private static final String PIN_REGEX = "\\d{4}";
 
     private static String REQUIRED_MSG = "Requerido";
     private static String EMAIL_MSG = "Email no valido";
@@ -34,6 +40,7 @@ public class Validation
     private static String USERNAME_MSG = "Nombre de usuario no válido";
     private static String AMOUNT_MSG = "No es un monto valido";
     private static String VOUCHER_MSG = "Comprobante no valido";
+    private static String PIN_MESSAGE = "PIN no valido";
 
 
     public Validation(Context pContext)
@@ -46,6 +53,86 @@ public class Validation
         PHONE_MSG = mContext.getResources().getString(R.string.validation_not_valid_phone);
         AMOUNT_MSG = mContext.getResources().getString(R.string.validation_not_valid_amount);
         VOUCHER_MSG = mContext.getResources().getString(R.string.validation_not_valid_voucher);
+    }
+
+    /*
+    *
+    *   INPUT FORMATTERS
+    *
+    */
+
+    public void setPinInputFormatter(final EditText pPinInput, final EditText pConfirmPinInput)
+    {
+        pPinInput.setTransformationMethod(new PasswordTransformationMethod());
+        pPinInput.setTypeface(Typeface.DEFAULT);
+
+        pPinInput.addTextChangedListener(new TextWatcher()
+        {
+            int TextLength = 0;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+                String str = pPinInput.getText().toString();
+                TextLength = str.length();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                String PinText = pPinInput.getText().toString();
+
+                //Esconde el teclado después que el EditText alcanzó los 4 dígitos
+                if (PinText.length() == 4 && TextLength < PinText.length())
+                {
+                    InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                }
+            }
+        });
+
+
+        /*
+        *     PIN CODE CONFFIRMATION
+        */
+        pConfirmPinInput.setTransformationMethod(new PasswordTransformationMethod());
+        pConfirmPinInput.setTypeface(Typeface.DEFAULT);
+        pConfirmPinInput.addTextChangedListener(new TextWatcher()
+        {
+            int TextLength = 0;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+                String str = pConfirmPinInput.getText().toString();
+                TextLength = str.length();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                String PinText = pConfirmPinInput.getText().toString();
+
+                //Esconde el teclado después que el EditText alcanzó los 4 dígitos
+                if (PinText.length() == 4 && TextLength < PinText.length())
+                {
+                    InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                }
+            }
+        });
     }
 
     public void initializePasswordValidator(final EditText pEdittext)
@@ -214,6 +301,11 @@ public class Validation
         }
 
         return valid;
+    }
+
+    public boolean isValidPIN(EditText pEditText, boolean pRequired)
+    {
+        return IsValid(pEditText, PIN_REGEX, PIN_MESSAGE, pRequired);
     }
 
 

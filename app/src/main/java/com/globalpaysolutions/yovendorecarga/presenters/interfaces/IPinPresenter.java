@@ -7,6 +7,8 @@ package com.globalpaysolutions.yovendorecarga.presenters.interfaces;
 public interface IPinPresenter
 {
     void initialViewsState(String pIntentExtra);
-    void saveSecurityPin();
-    void validateIntents();
+    void checkCredentials();
+    void validatePassword(String pPassword);
+    void saveSecurityPin(String pPIN, boolean isFirstTime);
+
 }
