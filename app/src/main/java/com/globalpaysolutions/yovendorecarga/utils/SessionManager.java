@@ -12,8 +12,8 @@ public class SessionManager
 {
     SharedPreferences mPreferences;
     SharedPreferences.Editor mEditor;
-    Context mContext;
-    int PRIVATE_MODE = 0;
+    private Context mContext;
+    private int PRIVATE_MODE = 0;
 
     /*  PREFERENCIAS DEL PIN    */
     SharedPreferences mPinPreferences;
@@ -30,25 +30,25 @@ public class SessionManager
 
     private static final String PREF_NAME = "yvsPref";
     private static final String IS_LOGIN = "IsLoggedIn";
-    public static final String KEY_BALANCE = "availableBalance";
-    public static final String KEY_USER_EMAIL = "userEmail";
-    public static final String KEY_TOKEN = "userToken";
-    public static final String KEY_FIRST_NAME = "firstName";
-    public static final String KEY_LAST_NAME = "lastName";
-    public static final String KEY_REMEMBER_EMAIL = "rememberEmail";
-    public static final String KEY_PPW = "userOtherWayConffirmation";
-    public static final String KEY_SESSION_ID = "sessionID";
-    public static final String KEY_VENDOR_M = "vendorM";
-    public static final String KEY_COUNTRY_ID = "countryId";
-    public static final String KEY_ISO3_CODE = "iso3Code";
-    public static final String KEY_PHONE_CODE = "PhoneCode";
-    public static final String KEY_VENDOR_CODE = "VendorCode";
+    private static final String KEY_BALANCE = "availableBalance";
+    private static final String KEY_USER_EMAIL = "userEmail";
+    private static final String KEY_TOKEN = "userToken";
+    private static final String KEY_FIRST_NAME = "firstName";
+    private static final String KEY_LAST_NAME = "lastName";
+    private static final String KEY_REMEMBER_EMAIL = "rememberEmail";
+    private static final String KEY_PPW = "userOtherWayConffirmation";
+    private static final String KEY_SESSION_ID = "sessionID";
+    private static final String KEY_VENDOR_M = "vendorM";
+    private static final String KEY_COUNTRY_ID = "countryId";
+    private static final String KEY_ISO3_CODE = "iso3Code";
+    private static final String KEY_PHONE_CODE = "PhoneCode";
+    private static final String KEY_VENDOR_CODE = "VendorCode";
     public static final String KEY_SHOWCASE_SHOWN = "ShowcaseViewShown";
     private static final String KEY_DEVICE_IP_ADDRESS = "device_ip_address";
     private static final String KEY_DEVICE_ID = "device_id";
 
-    public static final String KEY_ACTIVATE_PIN = "securityPin";
-    public static final String KEY_PIN_CODE = "pinCode";
+    private static final String KEY_ACTIVATE_PIN = "securityPin";
+    private static final String KEY_PIN_CODE = "pinCode";
 
     public SessionManager(Context pContext)
     {
@@ -107,6 +107,12 @@ public class SessionManager
         mEditor.commit();
     }
 
+    public void setPinActive(boolean pActive)
+    {
+        mPinEditor.putBoolean("KEY_ACTIVATE_PIN", pActive);
+        mPinEditor.commit();
+    }
+
 
     /*
     * **************************************************
@@ -118,20 +124,17 @@ public class SessionManager
 
     public String getDeviceIpAddress()
     {
-        String deviceIpAddress = mPreferences.getString(KEY_DEVICE_IP_ADDRESS, "");
-        return deviceIpAddress;
+        return mPreferences.getString(KEY_DEVICE_IP_ADDRESS, "");
     }
 
     public String getDeviceID()
     {
-        String deviceID = mPreferences.getString(KEY_DEVICE_ID, "");
-        return deviceID;
+        return mPreferences.getString(KEY_DEVICE_ID, "");
     }
 
     public String getUserPassword()
     {
-        String password = mPreferences.getString(KEY_PPW, "");
-        return password;
+        return mPreferences.getString(KEY_PPW, "");
     }
 
     public String getUserToken()
@@ -142,8 +145,7 @@ public class SessionManager
 
     public String getUserPin()
     {
-        String securityPin = mPinPreferences.getString(KEY_PIN_CODE, "");
-        return securityPin;
+        return mPinPreferences.getString(KEY_PIN_CODE, "");
     }
 
     public boolean getRememberEmailValue()
@@ -156,6 +158,10 @@ public class SessionManager
         return mPreferences.getString(KEY_USER_EMAIL, "");
     }
 
+    public boolean isUserPinActive()
+    {
+        return mPinPreferences.getBoolean("KEY_ACTIVATE_PIN", false);
+    }
 
 
     /*
